@@ -13,30 +13,52 @@ public class VentanaJuego extends JFrame implements VistaTablero {
     private JLabel labelPuntaje;
     private PresenterJuego presenter;
 
+    //COLORES
+    private Color colorFondo = new Color(41, 70, 110);
+    private Color colorCeldaVacia = new Color(136, 159, 189);
+    private Color colorFicha1 = new Color(87, 183, 230);//azul
+    private Color colorFicha2 = new Color(176, 37, 37);//rojo
+    private Color colorFicha3 = new Color(255, 255, 255); //blamco
+    
     public VentanaJuego() {
         setTitle("Threes!");
-        setSize(1366, 768);
+        setSize(500, 560);//baje el tamanio de la grilla
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
-
+        
+        //fondode la ventana 
+        getContentPane().setBackground(colorFondo);
+        
         // Panel del tablero (centro)
         JPanel panelTablero = new JPanel(new GridLayout(4, 4, 5, 5));
+        panelTablero.setPreferredSize(new Dimension(380, 380)); // Cuadrado centrado
+        panelTablero.setBackground(colorFondo);
+        
         for (int fila = 0; fila < 4; fila++) {
             for (int columna = 0; columna < 4; columna++) {
                 JLabel celda = new JLabel("", SwingConstants.CENTER);
                 celda.setOpaque(true);
-                celda.setBackground(Color.LIGHT_GRAY);
+                celda.setBackground(colorCeldaVacia);
                 celda.setFont(new Font("Arial", Font.BOLD, 24));
                 celdas[fila][columna] = celda;
                 panelTablero.add(celda);
             }
         }
-        add(panelTablero, BorderLayout.CENTER);
+        
+        //JPanel contenedor, mantiene ;la grilla centrada 
+        JPanel panelContenedor = new JPanel(new GridBagLayout());
+        panelContenedor.setOpaque(false);
+        panelContenedor.add(panelTablero);
+        
+        add(panelContenedor, BorderLayout.CENTER);
+
 
         // Label de puntaje (arriba)
         labelPuntaje = new JLabel("Puntaje: 0", SwingConstants.CENTER);
         labelPuntaje.setFont(new Font("Arial", Font.BOLD, 18));
+        labelPuntaje.setForeground(Color.WHITE);
+        labelPuntaje.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
         add(labelPuntaje, BorderLayout.NORTH);
 
         // Captura de teclado
@@ -52,6 +74,7 @@ public class VentanaJuego extends JFrame implements VistaTablero {
                     case KeyEvent.VK_RIGHT -> presenter.onFlechaDerecha();
                 }
             }
+            
             @Override
             public void keyReleased(KeyEvent e) {}
             @Override
@@ -70,9 +93,28 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         for (int fila = 0; fila < 4; fila++) {
             for (int columna = 0; columna < 4; columna++) {
                 int valor = valores[fila][columna];
-                celdas[fila][columna].setText(valor == 0 ? "" : String.valueOf(valor));
+                JLabel celda =celdas[fila][columna];
+                
+                if(valor == 0) {
+                	celda.setText("");
+                	celda.setBackground(colorCeldaVacia);
+                }else {
+                	celda.setText(String.valueOf(valor));
+                	aplicarColorFicha(celda,valor);
+                }
+                
             }
         }
+    }
+    
+    private void aplicarColorFicha(JLabel celda, int valor) {
+    	if(valor == 1) {
+    		celda.setBackground(colorFicha1);
+    	}else if (valor == 2) {
+    		celda.setBackground(colorFicha2);
+    	}else{
+    		celda.setBackground(colorFicha3);
+    	}
     }
 
     @Override
