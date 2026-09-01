@@ -81,7 +81,7 @@ public class VentanaJuego extends JFrame implements VistaTablero {
             public void keyTyped(KeyEvent e) {}
         });
 
-        setVisible(true);
+        setVisible(true); 
     }
 
     public void setPresenter(PresenterJuego presenter) {
