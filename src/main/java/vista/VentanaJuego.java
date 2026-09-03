@@ -22,7 +22,7 @@ public class VentanaJuego extends JFrame implements VistaTablero {
     
     public VentanaJuego() {
         setTitle("Threes!");
-        setSize(500, 560);//baje el tamanio de la grilla
+        setSize(500, 630);//baje el tamanio de la grilla
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -61,6 +61,23 @@ public class VentanaJuego extends JFrame implements VistaTablero {
         labelPuntaje.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
         add(labelPuntaje, BorderLayout.NORTH);
 
+     // Boton de reiniciar tablero
+        JButton botonReiniciar = new JButton("Reiniciar");
+        botonReiniciar.setFont(new Font("Arial", Font.BOLD, 14));
+        botonReiniciar.setFocusable(false); 
+        botonReiniciar.addActionListener(e -> {
+            if (presenter != null) {
+                presenter.reiniciarJuego();
+            }
+        });
+        //JPanel para el boton
+        JPanel panelBoton = new JPanel();
+        panelBoton.setOpaque(false);
+        panelBoton.setBorder(BorderFactory.createEmptyBorder(10, 0, 15, 0));
+        panelBoton.add(botonReiniciar);
+        add(panelBoton, BorderLayout.SOUTH);
+       
+        
         // Captura de teclado
         setFocusable(true);
         addKeyListener(new KeyListener() {
@@ -124,6 +141,21 @@ public class VentanaJuego extends JFrame implements VistaTablero {
 
     @Override
     public void mostrarFinDeJuego(int puntajeFinal) {
-        JOptionPane.showMessageDialog(this, "¡Juego terminado! Puntaje final: " + puntajeFinal);
+    	int respuesta = JOptionPane.showConfirmDialog(
+                this,
+                "¡Juego terminado! Puntaje final: " + puntajeFinal + "\n Volver a jugar?",
+                "Game Over",
+                JOptionPane.YES_NO_OPTION
+        );    	
+    	
+    	if(respuesta == JOptionPane.YES_OPTION) {
+    		if (presenter != null) {
+    			presenter.reiniciarJuego();
+    		}
+    	}else {
+    		System.exit(0);
+    	}
+    	
     }
+    
 }

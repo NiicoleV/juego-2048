@@ -231,6 +231,18 @@ public class Tablero {
         }
         return false; //si no fslse(no hay celdas libres)
     }
+    
+    //
+    //METODO PARA REINICIAR EK JUEGO (reiniciar el tablero*)
+    public void reiniciarJuego() {
+    	for(int fila = 0; fila < tamanio; fila++) {
+    		for(int columna = 0; columna < tamanio; columna++) {
+    			celdas[fila][columna] = 0;
+    		}
+    	}
+    	generarCantidadFichas(3);
+    }
+    
 
     //
     //PUNTAJE
