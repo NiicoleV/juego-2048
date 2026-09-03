@@ -40,9 +40,9 @@ public class PresenterJuego {
 
     private void actualizarVista() {
         vista.mostrarTablero(tablero.getCeldas());
-        vista.mostrarPuntaje(puntaje);
+        vista.mostrarPuntaje(tablero.getPuntaje());
         if (tablero.estaTerminado()) {
-            vista.mostrarFinDeJuego(puntaje);
+            vista.mostrarFinDeJuego(tablero.getPuntaje());
         }
     }
 }

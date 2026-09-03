@@ -22,6 +22,11 @@ public class Tablero {
 
     //agrrega las fichas iniciales, funciona en tableros mas grandes
     private void agregarFichaAleatoria() {
+        //verifico antes si hay espacio vacio
+        if (!hayEspacioVacio()) {
+            return;
+        }
+
         boolean encontro = false;
         while(!encontro){
             //busco posicion random y genero el valor aleatorio
@@ -51,6 +56,10 @@ public class Tablero {
         if (valor1 == 2 && valor2 == 1) return true;
         return valor1 == valor2 && valor1 != 0 && valor1 % 3 == 0;
     }
+
+    //
+    //FMOVIMIENTOS
+    //
 
     //funcion para mover arriba
     public void moverArriba() {
@@ -175,6 +184,10 @@ public class Tablero {
         agregarFichaAleatoria();
     }
 
+    //
+    //FINAL DEL JUEGO
+    //
+
     //funcion para terminar que se llama constantemente en el presenter, si cumple las dos condiciones termina el juego
     public boolean estaTerminado() {
         return !hayEspacioVacio() && !hayFusionPosible();
@@ -217,6 +230,36 @@ public class Tablero {
             }
         }
         return false; //si no fslse(no hay celdas libres)
+    }
+
+    //
+    //PUNTAJE
+    //
+
+    //calcula el valor de la ficha elevando nivel a 3
+    private int puntosDeFicha(int valor) {
+        if (valor < 3) return 0;
+
+        int nivel = 0;
+        int v = valor;
+
+        while (v > 3) {
+            v = v / 2;//primero dividimos el valor en 2 hasta llegar a un numero menor a 3
+            nivel++;//el nivel es la potencia
+        }
+
+        return (int) Math.pow(3, nivel);//por ultimo hacemos la potencia de 3 elevado nivel
+    }
+
+    //basicamente recorro la matriz y voy llamando puntos de ficha y sumandolos
+    public int getPuntaje() {
+        int total = 0;
+        for (int fila = 0; fila < tamanio; fila++) {
+            for (int columna = 0; columna < tamanio; columna++) {
+                total += puntosDeFicha(getValor(fila, columna));
+            }
+        }
+        return total;
     }
 
     public int getValor(int fila, int columna) {
