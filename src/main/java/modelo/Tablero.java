@@ -85,25 +85,138 @@ public class Tablero {
         agregarFichaAleatoria();//despues de cada movimiento agregamos una ficha aleatoria
     }
 
-    //SIN HACER
+    //funcion para mover abajo, practicamente misma logica que mover arriba
     public void moverAbajo() {
-        // TODO
+        for (int columna = 0; columna < tamanio; columna++) {
+            // se guarda lo original antes de tocar algo, asi siempre compara al original
+            int[] original = new int[tamanio];
+            for (int fila = 0; fila < tamanio; fila++) {
+                original[fila] = getValor(fila, columna);
+            }
+
+            for (int fila = tamanio - 2; fila >= 0; fila--) {
+                int abajo = original[fila + 1];
+                int actual = original[fila];
+
+                if (actual == 0) {
+                    continue;
+                }
+                if (abajo == 0) {
+                    setValor(fila + 1, columna, actual);
+                    setValor(fila, columna, 0);
+                }
+
+                else if (esFusionable(abajo, actual)) {
+                    setValor(fila +1 , columna, abajo + actual);
+                    setValor(fila, columna, 0);
+                }
+           }
+        }
+        agregarFichaAleatoria();
     }
 
-    //SIN HACER
+    //funcion mover izquierda, funciona guardando la fila original y y comparando filas
     public void moverIzquierda() {
-        // TODO
+        //gaurdo la fila en vez de la columna
+        for (int fila = 0; fila < tamanio; fila++) {
+            int[] original = new int[tamanio];
+            for (int columna = 0; columna < tamanio; columna++) {
+                original[columna] = getValor(fila, columna);
+            }
+
+            //hacemos las mismas comparaciones
+            for (int columna = 1; columna < tamanio; columna++) {
+                int izquierda = original[columna - 1];
+                int actual = original[columna];
+
+                if (actual == 0) {
+                    continue;
+                }
+
+                if (izquierda == 0) {
+                    setValor(fila, columna - 1, actual);
+                    setValor(fila, columna, 0);
+                } else if (esFusionable(izquierda, actual)) {
+                    setValor(fila, columna - 1, izquierda + actual);
+                    setValor(fila, columna, 0);
+                }
+            }
+        }
+        agregarFichaAleatoria();
     }
 
-    //SIN HACER
+    //funcion mover derecha, mismo funcionamiento inverso a izquierda, empezando desde tamanio-2 hasta 0
     public void moverDerecha() {
-        // TODO
+        //gaurdo la fila en vez de la columna
+        for (int fila = 0; fila < tamanio; fila++) {
+            int[] original = new int[tamanio];
+            for (int columna = 0; columna < tamanio; columna++) {
+                original[columna] = getValor(fila, columna);
+            }
+
+            //hacemos las mismas comparaciones
+            for (int columna = tamanio - 2 ; columna > 0 ; columna--) {
+                int izquierda = original[columna + 1];
+                int actual = original[columna];
+
+                if (actual == 0) {
+                    continue;
+                }
+
+                if (izquierda == 0) {
+                    setValor(fila, columna + 1, actual);
+                    setValor(fila, columna, 0);
+                } else if (esFusionable(izquierda, actual)) {
+                    setValor(fila, columna + 1, izquierda + actual);
+                    setValor(fila, columna, 0);
+                }
+            }
+        }
+        agregarFichaAleatoria();
     }
 
-    //SIN HACER
+    //funcion para terminar que se llama constantemente en el presenter, si cumple las dos condiciones termina el juego
     public boolean estaTerminado() {
-        // TODO: no hay celdas vacías y no hay fusiones posibles
-        return false;
+        return !hayEspacioVacio() && !hayFusionPosible();
+    }
+
+    //verificamos cada casilla con la de abajo y derecha, no hace falta izquierda y arriba porque comparariamos dos veces
+    public boolean hayFusionPosible() {
+        for (int fila = 0; fila < tamanio; fila++) {
+            for (int columna = 0; columna < tamanio; columna++) {
+                int actual = getValor(fila, columna);
+
+                //comparamos derecha
+                if (columna + 1 < tamanio) {
+                    int derecha = getValor(fila, columna + 1);
+                    if (esFusionable(actual, derecha)) {
+                        return true;//si se puede fuccionar entonces true
+                    }
+                }
+
+                // comparamos abajo
+                if (fila + 1 < tamanio) {
+                    int abajo = getValor(fila + 1, columna);
+                    if (esFusionable(actual, abajo)) {
+                        return true;//si se puede fuccionar entonces true
+                    }
+                }
+            }
+        }
+        return false;//NO hay ninguna combninacion posible
+    }
+
+    //funcion para saber si en toda la matriz hay un espacio en 0(una de las condiciones para verificar si el juego termino)
+    public boolean hayEspacioVacio() {
+        //recorremos toda la matriz para buscar casilla
+        for (int fila = 0; fila < tamanio; fila++) {
+            for (int columna = 0; columna < tamanio; columna++) {
+                if (estaVacia(fila, columna)) {
+                    return true; //si encontro una entonces retorno true
+                }
+            }
+        }
+        return false; //si no fslse(no hay celdas libres)
     }
 
     public int getValor(int fila, int columna) {
@@ -118,3 +231,4 @@ public class Tablero {
         return celdas;
     }
 }
+
